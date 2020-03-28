@@ -16,3 +16,12 @@ export function reserve(
     return `One-way ticket to ${returnOnOrDestination?.toUpperCase()} leaving on ${leaveOnOrDestination.toLocaleDateString()}`;
   }
 }
+
+export function call<A1, T extends unknown[], R>(
+  fn: (a1: A1, a2: string, ...args: T) => R,
+  a1: A1,
+  a2: string,
+  ...args: T
+): R {
+  return fn(a1, a2, ...args);
+}
