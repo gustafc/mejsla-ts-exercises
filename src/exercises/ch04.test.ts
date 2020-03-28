@@ -10,9 +10,13 @@ describe("3️⃣  Extend the 'reserve' function from page 60", () => {
     );
   });
 
-  it("can be used to book a one-way trip", () => {
+  it("can be used to book a one-way trip on a specific date", () => {
     expect(reserve(earlyDate, "Norway")).toBe(
       `One-way ticket to NORWAY leaving on ${earlyDate.toLocaleDateString()}`,
     );
+  });
+
+  it("can be used to book a one-way trip ASAP", () => {
+    expect(reserve("Gnarp")).toBe(`Going ASAP to GNARP`);
   });
 });
