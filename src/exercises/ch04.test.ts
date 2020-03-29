@@ -64,10 +64,18 @@ describe("5️⃣  Implement `is`", () => {
     });
   });
   describe("🔎 type correctness", () => {
-    class VeryWide {}
-    class Wide extends VeryWide {}
-    class Narrow extends Wide {}
-    class VeryNarrow extends Narrow {}
+    class VeryWide {
+      veryWide = 1;
+    }
+    class Wide extends VeryWide {
+      wide = 2;
+    }
+    class Narrow extends Wide {
+      narrow = 3;
+    }
+    class VeryNarrow extends Narrow {
+      veryNarrow = 4;
+    }
     const veryNarrow = new VeryNarrow();
     const narrow = new Narrow();
     const wide = new Wide();
@@ -83,12 +91,11 @@ describe("5️⃣  Implement `is`", () => {
       expect(typeof is(veryWide, veryNarrow, narrow, wide)).toBe("boolean");
       expect(typeof is(wide, narrow, veryNarrow)).toBe("boolean");
       expect(typeof is(wide, veryNarrow, narrow)).toBe("boolean");
-      expect(typeof is(narrow, veryNarrow, wide)).toBe("boolean");
     });
-    it("surprisingly allows superclasses, presumably by widening the generic type?", () => {
-      expect(typeof is(veryNarrow, narrow, wide, veryWide)).toBe("boolean");
-      expect(typeof is(veryNarrow, wide)).toBe("boolean");
-    });
+    // it("would allow these if we had no fields in the class hierarchy", () => {
+    //   expect(typeof is(veryNarrow, narrow, wide, veryWide)).toBe("boolean");
+    //   expect(typeof is(veryNarrow, wide)).toBe("boolean");
+    // });
     it("has a surprising interaction with `any` type", () => {
       // `any` can also be a subtype!
       const superWide: any = veryNarrow;
