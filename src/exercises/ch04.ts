@@ -25,3 +25,7 @@ export function call<A1, T extends unknown[], R>(
 ): R {
   return fn(a1, a2, ...args);
 }
+
+export function is<T, U extends T>(a: T, b: U, ...rest: U[]): boolean {
+  return a === b && rest.every(r => r === a);
+}

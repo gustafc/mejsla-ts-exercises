@@ -1,4 +1,4 @@
-import { reserve, call } from "./ch04";
+import { reserve, call, is } from "./ch04";
 
 describe("3️⃣  Extend the 'reserve' function from page 60", () => {
   const earlyDate = new Date(1584203809780);
@@ -44,4 +44,55 @@ describe("4️⃣  Narrow the 'call' function from page 78 to only accept string
   //   }
   //   expect(call(notAccepted, 1, 2, 3)).toBe(6);
   // });
+});
+
+describe("5️⃣  Implement `is`", () => {
+  describe("🆗 Positive cases", () => {
+    it("should work with two args", () => {
+      expect(is("a", "a")).toBe(true);
+    });
+    it("should work with three args", () => {
+      expect(is("a", "a", "a")).toBe(true);
+    });
+  });
+  describe("🆗 Negative cases", () => {
+    it("should work with two args", () => {
+      expect(is("a", "b")).toBe(false);
+    });
+    it("should work with three args", () => {
+      expect(is("a", "a", "b")).toBe(false);
+    });
+  });
+  describe("🔎 type correctness", () => {
+    class VeryWide {}
+    class Wide extends VeryWide {}
+    class Narrow extends Wide {}
+    class VeryNarrow extends Narrow {}
+    const veryNarrow = new VeryNarrow();
+    const narrow = new Narrow();
+    const wide = new Wide();
+    const veryWide = new VeryWide();
+    const literal: "a" = "a";
+    const primitive: string = literal;
+    it("should allow subtypes", () => {
+      // Types:
+      expect(is(primitive, literal)).toBe(true);
+      // Classes:
+      expect(typeof is(veryWide, wide, narrow, veryNarrow)).toBe("boolean");
+      expect(typeof is(veryWide, narrow, wide, veryNarrow)).toBe("boolean");
+      expect(typeof is(veryWide, veryNarrow, narrow, wide)).toBe("boolean");
+      expect(typeof is(wide, narrow, veryNarrow)).toBe("boolean");
+      expect(typeof is(wide, veryNarrow, narrow)).toBe("boolean");
+      expect(typeof is(narrow, veryNarrow, wide)).toBe("boolean");
+    });
+    it("surprisingly allows superclasses, presumably by widening the generic type?", () => {
+      expect(typeof is(veryNarrow, narrow, wide, veryWide)).toBe("boolean");
+      expect(typeof is(veryNarrow, wide)).toBe("boolean");
+    });
+    it("has a surprising interaction with `any` type", () => {
+      // `any` can also be a subtype!
+      const superWide: any = veryNarrow;
+      expect(is(veryNarrow, superWide)).toBe(true);
+    });
+  });
 });
