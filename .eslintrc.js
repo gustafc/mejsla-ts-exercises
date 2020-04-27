@@ -17,6 +17,12 @@ module.exports = {
     ],
     "rules": {
         "@typescript-eslint/array-type": "error",
+        "@typescript-eslint/no-empty-function": [
+            "error",
+            {
+                "allow": ["private-constructors", "protected-constructors"]
+            }
+        ],
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-parameter-properties": "off",
         "@typescript-eslint/no-use-before-define": "off",
@@ -45,10 +51,6 @@ module.exports = {
             "undefined"
         ],
         "id-match": "error",
-        "max-classes-per-file": [
-            "error",
-            1
-        ],
         "new-parens": "error",
         "no-bitwise": "error",
         "no-caller": "error",
