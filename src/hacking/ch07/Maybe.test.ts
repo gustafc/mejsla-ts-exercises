@@ -35,3 +35,23 @@ describe("flatMap", () => {
     assertIsNone(Maybe(null).flatMap(n => Maybe(1)));
   });
 });
+
+describe("orElse", () => {
+  it("Just.orElse = value", () => {
+    expect(Maybe(1).orElse(() => 2));
+  });
+  it("None.orElse = arg", () => {
+    expect(None.INSTANCE.orElse(() => 2));
+  });
+});
+
+describe("toString", () => {
+  [
+    [Maybe(null), "None"],
+    [Maybe(123), "Just(123)"],
+  ].forEach(([m, toStringed]) => {
+    it("should toString " + toStringed, () => {
+      expect(String(m)).toBe(toStringed);
+    });
+  });
+});

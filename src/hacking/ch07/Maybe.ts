@@ -11,11 +11,20 @@ export function Maybe<T>(t: T | null | undefined): Maybe<T> {
 }
 
 export interface Maybe<T extends Existing> {
-  flatMap<V extends Existing>(f: (t: T) => Maybe<V>): Maybe<V>;
+  flatMap<U extends Existing>(f: (t: T) => Maybe<U>): Maybe<U>;
+  orElse<U>(alt: () => T): T | U;
 }
 
 abstract class Perhaps<T> implements Maybe<T> {
   abstract flatMap<V extends Existing>(f: (t: T) => Maybe<V>): Maybe<V>;
+  abstract orElse<V>(alt: () => T): T | V;
+  map<U extends Existing>(f: (t: T) => U): Maybe<U> {
+    // FIXME: Why do I need to specify type parameter to flatMap here?
+    return this.flatMap<U>(t => Maybe(f(t)));
+  }
+  toString(): string {
+    return this.constructor.name + this.map(t => `(${t})`).orElse(() => "");
+  }
 }
 
 export class Just<T> extends Perhaps<T> {
@@ -30,8 +39,9 @@ export class Just<T> extends Perhaps<T> {
   flatMap<V>(f: (t: T) => Maybe<V>): Maybe<V> {
     return f(this.value);
   }
-  toString(): string {
-    return `Just(${this.value})`;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  orElse<V>(alt: () => V): T {
+    return this.value;
   }
 }
 
@@ -43,7 +53,7 @@ export class None extends Perhaps<never> {
   flatMap<V>(): Maybe<V> {
     return this;
   }
-  toString(): string {
-    return this.constructor.name;
+  orElse<V>(alt: () => V): V {
+    return alt();
   }
 }
