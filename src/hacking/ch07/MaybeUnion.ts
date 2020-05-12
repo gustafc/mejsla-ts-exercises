@@ -8,36 +8,10 @@ type PipeFn<A, B> = (arg: Maybe<A>) => Maybe<B>;
 export function pipe<T>(value: Maybe<T>): Maybe<T>;
 export function pipe<T, A>(value: Maybe<T>, op1: PipeFn<T, A>): Maybe<A>;
 export function pipe<T, A, B>(value: Maybe<T>, op1: PipeFn<T, A>, op2: PipeFn<A, B>): Maybe<B>;
-export function pipe<T, A, B, C>(
-  value: Maybe<T>,
-  op1: PipeFn<T, A>,
-  op2: PipeFn<A, B>,
-  op3: PipeFn<B, C>,
-): Maybe<C>;
-export function pipe<T, A, B, C, D>(
-  value: Maybe<T>,
-  op1: PipeFn<T, A>,
-  op2: PipeFn<A, B>,
-  op3: PipeFn<B, C>,
-  op4: PipeFn<C, D>,
-): Maybe<D>;
-export function pipe<T, A, B, C, D, E>(
-  value: Maybe<T>,
-  op1: PipeFn<T, A>,
-  op2: PipeFn<A, B>,
-  op3: PipeFn<B, C>,
-  op4: PipeFn<C, D>,
-  op5: PipeFn<D, E>,
-): Maybe<E>;
-export function pipe<T, A, B, C, D, E, F>(
-  value: Maybe<T>,
-  op1: PipeFn<T, A>,
-  op2: PipeFn<A, B>,
-  op3: PipeFn<B, C>,
-  op4: PipeFn<C, D>,
-  op5: PipeFn<D, E>,
-  op6: PipeFn<E, F>,
-): Maybe<F>;
+export function pipe<T, A, B, C>(value: Maybe<T>, op1: PipeFn<T, A>, op2: PipeFn<A, B>, op3: PipeFn<B, C>): Maybe<C>;
+export function pipe<T, A, B, C, D>(value: Maybe<T>, op1: PipeFn<T, A>, op2: PipeFn<A, B>, op3: PipeFn<B, C>, op4: PipeFn<C, D>): Maybe<D>;
+export function pipe<T, A, B, C, D, E>(value: Maybe<T>, op1: PipeFn<T, A>, op2: PipeFn<A, B>, op3: PipeFn<B, C>, op4: PipeFn<C, D>, op5: PipeFn<D, E>): Maybe<E>;
+export function pipe<T, A, B, C, D, E, F>(value: Maybe<T>, op1: PipeFn<T, A>, op2: PipeFn<A, B>, op3: PipeFn<B, C>, op4: PipeFn<C, D>, op5: PipeFn<D, E>, op6: PipeFn<E, F>): Maybe<F>;
 export function pipe<T, A, B, C, D, E, F>(
   value: Maybe<T>,
   op1: PipeFn<T, A>,

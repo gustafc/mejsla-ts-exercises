@@ -43,6 +43,6 @@
   },
   "prettier": {
     "trailingComma": "all",
-    "printWidth": 100
+    "printWidth": 200
   }
 }
