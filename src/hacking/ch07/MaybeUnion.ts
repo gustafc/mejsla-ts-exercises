@@ -3,6 +3,55 @@ export type None = typeof None;
 export type Just<T> = { readonly value: T };
 export type Maybe<T> = None | Just<T>;
 
+type PipeFn<A, B> = (arg: Maybe<A>) => Maybe<B>;
+
+export function pipe<T>(value: Maybe<T>): Maybe<T>;
+export function pipe<T, A>(value: Maybe<T>, op1: PipeFn<T, A>): Maybe<A>;
+export function pipe<T, A, B>(value: Maybe<T>, op1: PipeFn<T, A>, op2: PipeFn<A, B>): Maybe<B>;
+export function pipe<T, A, B, C>(
+  value: Maybe<T>,
+  op1: PipeFn<T, A>,
+  op2: PipeFn<A, B>,
+  op3: PipeFn<B, C>,
+): Maybe<C>;
+export function pipe<T, A, B, C, D>(
+  value: Maybe<T>,
+  op1: PipeFn<T, A>,
+  op2: PipeFn<A, B>,
+  op3: PipeFn<B, C>,
+  op4: PipeFn<C, D>,
+): Maybe<D>;
+export function pipe<T, A, B, C, D, E>(
+  value: Maybe<T>,
+  op1: PipeFn<T, A>,
+  op2: PipeFn<A, B>,
+  op3: PipeFn<B, C>,
+  op4: PipeFn<C, D>,
+  op5: PipeFn<D, E>,
+): Maybe<E>;
+export function pipe<T, A, B, C, D, E, F>(
+  value: Maybe<T>,
+  op1: PipeFn<T, A>,
+  op2: PipeFn<A, B>,
+  op3: PipeFn<B, C>,
+  op4: PipeFn<C, D>,
+  op5: PipeFn<D, E>,
+  op6: PipeFn<E, F>,
+): Maybe<F>;
+export function pipe<T, A, B, C, D, E, F>(
+  value: Maybe<T>,
+  op1: PipeFn<T, A>,
+  op2: PipeFn<A, B>,
+  op3: PipeFn<B, C>,
+  op4: PipeFn<C, D>,
+  op5: PipeFn<D, E>,
+  op6: PipeFn<E, F>,
+  ...operations: PipeFn<any, any>[]
+): Maybe<{}>;
+export function pipe<T>(value: Maybe<T>, ...operations: PipeFn<any, any>[]): Maybe<any> {
+  return operations.reduce((prev: Maybe<any>, fn: PipeFn<any, any>) => fn(prev), value);
+}
+
 function isNone(v: any): v is None {
   return v === None;
 }
@@ -20,12 +69,28 @@ export function flatMap<T, V>(m: Maybe<T>, f: (t: T) => Maybe<V>): Maybe<V> {
 }
 
 export function map<T, V>(m: Maybe<T>, f: (t: T) => V): Maybe<V> {
-  return flatMap(m, t => Maybe(f(t)));
+  return flatMap(m, (t) => Maybe(f(t)));
+}
+
+export function filter<T>(m: Maybe<T>, f: (t: T) => boolean): Maybe<T> {
+  return isNone(m) || !f(m.value) ? None : m;
+}
+
+export function flatMapFn<T, V>(f: (t: T) => Maybe<V>): PipeFn<T, V> {
+  return (m: Maybe<T>) => flatMap(m, f);
+}
+
+export function mapFn<T, V>(f: (t: T) => V): PipeFn<T, V> {
+  return (m: Maybe<T>) => map(m, f);
+}
+
+export function filterFn<T>(f: (t: T) => boolean): PipeFn<T, T> {
+  return (m: Maybe<T>) => filter(m, f);
 }
 
 export function toString<T>(m: Maybe<T>): string {
   return orElse(
-    map(m, t => "Just(" + t + ")"),
+    map(m, (t) => "Just(" + t + ")"),
     "None",
   );
 }
