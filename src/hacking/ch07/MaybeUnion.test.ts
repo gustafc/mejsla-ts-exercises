@@ -1,4 +1,14 @@
-import { Maybe, Just, None, orElse, flatMap, map, toString } from "./MaybeUnion";
+import {
+  Maybe,
+  None,
+  orElse,
+  flatMap,
+  toString,
+  filterFn,
+  mapFn,
+  pipe,
+  flatMapFn,
+} from "./MaybeUnion";
 
 function assertIsJust<T>(expectedValue: T, maybeT: Maybe<T>) {
   expect(maybeT).toHaveProperty("value", expectedValue);
@@ -24,14 +34,14 @@ describe("flatMap", () => {
   it("maps Just+Just to Just", () => {
     assertIsJust(
       "12",
-      flatMap(Maybe(1), n => Maybe(n + "2")),
+      flatMap(Maybe(1), (n) => Maybe(n + "2")),
     );
   });
   it("maps Just+None to None", () => {
-    assertIsNone(flatMap(Maybe(1), n => Maybe(null)));
+    assertIsNone(flatMap(Maybe(1), (n) => Maybe(null)));
   });
   it("maps None+Just to None", () => {
-    assertIsNone(flatMap(Maybe(null), n => Maybe(1)));
+    assertIsNone(flatMap(Maybe(null), (n) => Maybe(1)));
   });
 });
 
@@ -52,5 +62,31 @@ describe("toString", () => {
     it("should toString " + toStringed, () => {
       expect(toString(m)).toBe(toStringed);
     });
+  });
+});
+
+describe("pipe", () => {
+  it("can construct Just", () => {
+    const just1 = Maybe("Pelle");
+    const pipe1 = pipe(
+      just1,
+      mapFn((s) => s + " Svanslös"),
+      flatMapFn((s) => Maybe(s)),
+      mapFn((s) => s.length),
+      filterFn((l) => l > 10),
+    );
+    assertIsJust(14, pipe1);
+  });
+
+  it("can pipe None", () => {
+    const just1 = Maybe("Pelle");
+    const pipe1 = pipe(
+      just1,
+      filterFn((s) => s.startsWith("Q")),
+      mapFn((s) => s + " Svanslös"),
+      mapFn((s) => s.length),
+      filterFn((l) => l > 10),
+    );
+    assertIsNone(pipe1);
   });
 });
